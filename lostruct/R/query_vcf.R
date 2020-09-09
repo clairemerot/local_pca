@@ -47,7 +47,7 @@ vcf_query <- function (file, regions, samples, verbose=FALSE, recode=TRUE) {
 	bcf.args <- c( bcf.args, file )
     bcf.call <- paste(bcf.args, collapse=" ")
     if (verbose) cat(bcf.call, "\n")
-    gt.text <- tryCatch( as.matrix(data.table::fread( bcf.call, header=FALSE, sep=' ', data.table=FALSE )),
+    gt.text <- tryCatch( as.matrix(data.table::fread( cmd=bcf.call, header=FALSE, sep=' ', data.table=FALSE )),
                    error=function (e) { if ( grepl("File is empty", e$message) ) { NULL } else { stop(paste("Error. Is bcftools installed?\n",e)) } },
                    warning=function (w) { if ( grepl("has size 0", w$message) ) { NULL } else { stop(paste("Error. Is bcftools installed?\n",e)) } } )
     if (is.null(gt.text) || !recode) { return(gt.text) }
@@ -140,7 +140,7 @@ vcf_positions <- function (file) {
 	# bcf.con <- pipe(paste("bcftools query -f '%CHROM\\t%POS\\n'",file),open="r")
 	# bcf.sites <- read.table(bcf.con, sep='\t')
 	# close(bcf.con)
-	bcf.sites <- data.table::fread(paste("bcftools query -f '%CHROM\\t%POS\\n'",file), header=FALSE, sep='\t', data.table=FALSE)
+	bcf.sites <- data.table::fread(cmd=paste("bcftools query -f '%CHROM\\t%POS\\n'",file), header=FALSE, sep='\t', data.table=FALSE)
 	colnames(bcf.sites) <- c("chrom","pos")
 	return( tapply( bcf.sites$pos, bcf.sites$chrom, identity) )
 }
