@@ -43,7 +43,7 @@ region_string <- function (regions) {
 vcf_query <- function (file, regions, samples, verbose=FALSE, recode=TRUE) {
 	bcf.args <- c("bcftools", "query", "-f", "'[ %GT]\ \n'")
 	if (!missing(regions) && length(regions)>0) { bcf.args <- c( bcf.args, "-r", region_string(regions) ) }
-	if (!missing(samples) && length(samples)>0) { bcf.args <- c( bcf.args, "-s", paste(samples,collapse=',') ) }
+	#if (!missing(samples) && length(samples)>0) { bcf.args <- c( bcf.args, "-s", paste(samples,collapse=',') ) }
 	bcf.args <- c( bcf.args, file )
     bcf.call <- paste(bcf.args, collapse=" ")
     if (verbose) cat(bcf.call, "\n")
@@ -123,7 +123,7 @@ multi_vcf_query_fn <- function (chrom.list, file=names(chrom.list), regions, ...
     }
     attr(qfun,"max.n") <- nrow(regions)
     attr(qfun,"region") <- regions
-    attr(qfun,"samples") <- samples(files[1])
+    #attr(qfun,"samples") <- samples(files[1])
     return(qfun)
 }
 
